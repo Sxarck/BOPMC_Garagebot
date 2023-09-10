@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import configparser
+import json
+from contextlib import suppress
+
+
+def get_updated_ini_counter():
+    filename = 'config.ini'
+    section = 'general'
+    option = 'counter'
+    starting_count = 100
+
+    config = configparser.ConfigParser()
+    config.read(filename)
+    counter = 1 + int(config.get(section, option, fallback=starting_count - 1))
+    if section not in config:
+        config.add_section(section)
+    config.set(section, option, str(counter))
+    with open('config.ini', 'w') as f:
+        config.write(f)
+    return counter
+
+
+def get_updated_json_counter():
+    filename = 'config.json'
+    option = 'counter'
+    starting_count = 100
+    config = {}
+
+    with suppress(FileNotFoundError):
+        with open(filename) as f:
+            config = json.load(f)
+    config[option] = 1 + config.get(option, starting_count - 1)
+    with open(filename, 'w') as f:
+        json.dump(config, f, indent=4)
+    return config[option]
+
+
+if __name__ == '__main__':
+    print('ini counter  = {}'.format(get_updated_ini_counter()))
+    print('json counter = {}'.format(get_updated_json_counter()))
