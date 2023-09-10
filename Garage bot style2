@@ -1,0 +1,14 @@
+import datetime
+
+def hello():
+    print "hello, world"
+
+if __name__ == "__main__":
+
+    now = datetime.datetime.now()
+    ## create log
+    with open("logs.txt", "a") as log:
+        log.write(str(now) + "\n") ## write out to log 
+
+    ## run hello
+    hello()
